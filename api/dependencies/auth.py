@@ -21,7 +21,8 @@ def get_current_user(
             detail="Missing user identity",
         )
 
-    scopes = {scope.strip() for scope in (x_scopes or "").split(",") if scope.strip()}
+    scopes = {scope.strip()
+              for scope in (x_scopes or "").split(",") if scope.strip()}
     return UserContext(user_id=x_user_id, scopes=scopes)
 
 

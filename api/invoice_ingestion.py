@@ -37,12 +37,14 @@ def list_intake_invoices(
     _user: Annotated[UserContext, Depends(get_current_user)],
     _scope: Annotated[UserContext, Depends(check_scope("finance_analyst"))],
     service: Annotated[InvoiceIngestionService, Depends(get_invoice_ingestion_service)],
-    source: Annotated[Literal["AP email", "Accounting system"] | None, Query()] = None,
+    source: Annotated[Literal["AP email",
+                              "Accounting system"] | None, Query()] = None,
     sort: Annotated[Literal["asc", "desc"], Query()] = "desc",
 ) -> ApiResponse[list[InvoiceIntakeItemResponse]]:
     mapped_source = IngestionSource(source) if source else None
     newest_first = sort == "desc"
-    items = service.list_for_analyst(source=mapped_source, newest_first=newest_first)
+    items = service.list_for_analyst(
+        source=mapped_source, newest_first=newest_first)
 
     response_items = [
         InvoiceIntakeItemResponse(

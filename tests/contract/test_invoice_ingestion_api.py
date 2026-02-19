@@ -15,7 +15,8 @@ from services.invoice_ingestion_service import InvoiceIngestionService
 def _build_service_with_seed_data() -> InvoiceIngestionService:
     repository = InMemoryIntakeRepositoryAdapter()
     alerts = NoopIngestionAlertAdapter()
-    service = InvoiceIngestionService(intake_repository=repository, alert_port=alerts)
+    service = InvoiceIngestionService(
+        intake_repository=repository, alert_port=alerts)
 
     service.ingest_ap_email_invoice(
         source_id="mail-1",
@@ -67,7 +68,8 @@ def test_list_intake_requires_authentication() -> None:
 def test_list_intake_requires_finance_analyst_scope() -> None:
     client = _client(_build_service_with_seed_data())
 
-    response = client.get("/v1/invoices/intake", headers=_headers("finance_ops"))
+    response = client.get("/v1/invoices/intake",
+                          headers=_headers("finance_ops"))
 
     assert response.status_code == 403
 
@@ -91,7 +93,8 @@ def test_list_intake_filters_by_source_and_sorts_desc() -> None:
 def test_status_endpoint_requires_finance_ops_scope() -> None:
     client = _client(_build_service_with_seed_data())
 
-    response = client.get("/v1/ingestion/status", headers=_headers("finance_analyst"))
+    response = client.get("/v1/ingestion/status",
+                          headers=_headers("finance_analyst"))
 
     assert response.status_code == 403
 
@@ -99,7 +102,8 @@ def test_status_endpoint_requires_finance_ops_scope() -> None:
 def test_status_endpoint_returns_failure_events() -> None:
     client = _client(_build_service_with_seed_data())
 
-    response = client.get("/v1/ingestion/status", headers=_headers("finance_ops"))
+    response = client.get("/v1/ingestion/status",
+                          headers=_headers("finance_ops"))
 
     assert response.status_code == 200
     body = response.json()

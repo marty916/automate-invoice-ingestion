@@ -20,10 +20,12 @@ class NoopIngestionAlertAdapter(IngestionAlertPort):
         self.events: list[IngestionAlertEvent] = []
 
     def notify_failure(self, source: IngestionSource, error_type: str, occurred_at: datetime) -> None:
-        self.events.append(IngestionAlertEvent(source=source, error_type=error_type, occurred_at=occurred_at))
+        self.events.append(IngestionAlertEvent(
+            source=source, error_type=error_type, occurred_at=occurred_at))
 
     def list_failures(self) -> Sequence[IngestionFailureEvent]:
         return [
-            IngestionFailureEvent(source=event.source, error_type=event.error_type, occurred_at=event.occurred_at)
+            IngestionFailureEvent(
+                source=event.source, error_type=event.error_type, occurred_at=event.occurred_at)
             for event in self.events
         ]
