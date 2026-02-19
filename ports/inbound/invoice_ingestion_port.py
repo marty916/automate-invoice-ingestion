@@ -35,3 +35,11 @@ class InvoiceIngestionPort(ABC):
         newest_first: bool = True,
     ) -> Sequence[IngestedInvoice]:
         raise NotImplementedError
+
+    @abstractmethod
+    def process_ap_email_inbox(self, processed_at: datetime) -> Sequence[IngestedInvoice]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def process_accounting_sync(self, processed_at: datetime) -> Sequence[IngestedInvoice]:
+        raise NotImplementedError
