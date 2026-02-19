@@ -8,7 +8,7 @@ from domain.invoice_dedupe_policy import InvoiceDedupePolicy
 from ports.inbound.invoice_ingestion_port import InvoiceIngestionPort
 from ports.outbound.accounting_source_port import AccountingSourcePort
 from ports.outbound.ap_email_source_port import ApEmailSourcePort
-from ports.outbound.ingestion_alert_port import IngestionAlertPort
+from ports.outbound.ingestion_alert_port import IngestionAlertPort, IngestionFailureEvent
 from ports.outbound.intake_repository_port import IntakeRepositoryPort
 
 
@@ -115,6 +115,9 @@ class InvoiceIngestionService(InvoiceIngestionPort):
     def record_ingestion_failure(self, source: IngestionSource, error_type: str, occurred_at: datetime) -> None:
         self._alert_port.notify_failure(
             source=source, error_type=error_type, occurred_at=occurred_at)
+
+    def list_ingestion_failures(self) -> Sequence[IngestionFailureEvent]:
+        return self._alert_port.list_failures()
 
     def _require_ap_email_source(self) -> ApEmailSourcePort:
         if self._ap_email_source is None:
